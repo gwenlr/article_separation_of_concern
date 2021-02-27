@@ -16,7 +16,7 @@ détaillés.
 ## Concept
 
 Le concept de **Separation of Concerns** ou **SoC** a été décrit par E.W. Dijkstra dans l'article 
-*On the role of scientific thought* publié en 1974 et en voici l'extrait sur le sujet :
+*On the role of scientific thought* publié en 1974 et dont voici l'extrait sur le sujet :
 
 > Let me try to explain to you, what to my taste is characteristic for all intelligent thinking. It is, that one is
 > willing to study in depth an aspect of one's subject matter in isolation for the sake of its own consistency, all 
