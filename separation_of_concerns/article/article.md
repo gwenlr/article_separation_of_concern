@@ -42,7 +42,7 @@ responsabilités de niveau inférieure sont cohérentes entre elles. Et ainsi de
 
 ![Découpe arborescente](images/image-01.png)
 
-Il faut que l'ensemble des composants de la construction aient une responsabilité claire, cohérente et sans duplication
+Il faut que chaque composant de la construction ait une responsabilité claire, cohérente et sans duplication
 avec les autres.
 Il s'agit là d'une tâche ardue.
 
