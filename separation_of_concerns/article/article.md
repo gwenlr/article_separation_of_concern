@@ -34,11 +34,11 @@ En développement logiciel, la *séparation des responsabilités* vise à décou
 sous-programmes où chaque sous-programme a la responsabilité de traiter un aspect du programme. 
 Il en est de même pour chaque sous-programme qui est divisé en *sous-sous-programme* et ainsi de suite.
 
-D'un premier abord, cette découpe parait simple, cependant la vraie difficulté de tout cela réside dans la façon de 
+D'un premier abord, cette découpe paraît simple, cependant la vraie difficulté de tout cela réside dans la façon de 
 découper.
 En effet, il faut attribuer à chaque composant d'un niveau une responsabilité claire, et à chaque composant de 
 niveau inférieur, il faut donner un morceau de la responsabilité supérieure tout en s'assurant que toutes ces 
-responsabilités de niveau inférieure sont cohérentes entre elles. Et ainsi de suite à chaque niveau. 
+responsabilités de niveau inférieur sont cohérentes entre elles. Et ainsi de suite à chaque niveau. 
 
 ![Découpe arborescente](images/image-01.png)
 
@@ -53,8 +53,8 @@ En langage Java, la subdivision des composants est la suivante
 * package
 * class
 * method
-Cela signifie qu'une *application* est composée d'un plusieurs *module*, que chaque *module* est composé d'un ou plus 
-*package*, que chaque *package* est composé d'une ou plusieurs *class*, que chaque *class* est composé d'une ou 
+Cela signifie qu'une *application* est composée d'un ou plusieurs *module*, que chaque *module* est composé d'un ou plus 
+*package*, que chaque *package* est composé d'une ou plusieurs *class*, que chaque *class* est composée d'une ou 
 plusieurs *method*.
 
 Bien entendu, cette division est déclinable à différentes échelles. 
@@ -65,7 +65,7 @@ Ainsi pour un système logiciel _simplifié_, cette division est :
 * etc
 
 Les exemples des chapitres suivants présentent des cas concrets de code ne respectant pas le principe de la séparation
-des responsabilités, une analyse des problèmes qui en découlent et une proposition résolution de ces problèmes à l'aide
+des responsabilités, une analyse des problèmes qui en découlent et une proposition de résolution de ces problèmes à l'aide
 de l'application du principe. 
 
 Il est important de conserver en mémoire les points suivants à propos des exemples : 
@@ -76,7 +76,7 @@ Il est important de conserver en mémoire les points suivants à propos des exem
 
 ## Exemple d'application 1 : séparation des sujets
 
-Cet exemple illustre l'application du concept pour distinguer les sujets traités dans composant en un ensemble de 
+Cet exemple illustre l'application du concept pour distinguer les sujets traités en un ensemble de 
 composants traitant chacun un seul et unique sujet. 
 
 Le code de cet exemple est basé sur un service de gestion de bibliothèque. 
@@ -139,7 +139,7 @@ Une première observation rapide permet de constater que ce service est constitu
 Ce qui en fait un service plutôt étoffé, et son implémentation doit être volumineuse, voire complexe.
 
 Une observation plus détaillée du service permet de constater que les méthodes portent sur des entités différentes 
-(Livre, client, emprunts) et portent sur des tâches métier différentes (récupération, enregistrement, vérification, 
+(livres, clients, emprunts) et portent sur des tâches métier différentes (récupération, enregistrement, vérification, 
 etc.). 
 Cela implique que l'implémentation sera complexe à écrire et à lire, car chaque méthode pourra avoir un contexte très
 différent de la suivante.
