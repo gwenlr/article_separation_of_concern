@@ -497,7 +497,7 @@ En bref, l'usage, l'implémentation, la réutilisation et la maintenance du code
 
 
 
-# Example 4: Séparation de couches
+## Example 4: Séparation de couches
 
 La séparation des responsabilités s'applique également au niveau de l'architecture. 
 Selon sa nature, une architecture est décomposée en couches ou en composants (ex: BDD).
@@ -578,7 +578,7 @@ Il faudrait dupliquer une partie de ce code :
 * les méthodes *toJson* quand le format technique des données est le même.
 
 De plus, la méthode *getAvailableBookSet()* diffère des autres par son implémentation qui est purement métier, alors que
-les autres méthodes sont des méthodes techniques liés au protocole REST.
+les autres méthodes sont des méthodes techniques liées au protocole REST.
 
 Bref, ce code n'est pas suffisamment réutilisable. 
 
@@ -591,7 +591,7 @@ Comme vu dans l'analyse, la réutilisation n'est pas optimale pour deux raisons�
 
 Le mélange de code métier et technique est résolu en déplaçant ce code dans un couple interface / classe 
 d'implémentation.
-Le mélange code de service et code de formatage est résolu par le déplacement du code de formattage dans une classe 
+Le mélange code de service et code de formatage est résolu par le déplacement du code de formatage dans une classe 
 finale de type helper.
 
 #### La couche métier
@@ -684,7 +684,7 @@ l'architecture logicielle.
 
 D'un premier abord, le concept de "Separation of concern" peut sembler plutôt facile à appréhender puisqu'il "suffit de
 trier les choux des carottes".
-Mais dans sa mise en pratique, ce n'est toujours évident et pour certains cas il faudra parfois se reprendre à plusieurs
+Mais dans sa mise en pratique, ce n'est toujours évident et pour certains cas il faudra parfois s'y reprendre à plusieurs
 fois pour affiner le découpage.
 
 Dans les exemples de cet article, nous avons vu différents aspects pratiques de l'application du SoC :
@@ -693,7 +693,7 @@ Dans les exemples de cet article, nous avons vu différents aspects pratiques de
 * la séparation entre le fonctionnel et le technique
 * la séparation entre couches
 
-La notion de séparation of concerns se retrouve également dans différents design patterns du Gang of Four dont, par 
+La notion de separation of concerns se retrouve également dans différents design patterns du Gang of Four dont, par 
 exemple :
 * [Bridge pattern](https://fr.wikipedia.org/wiki/Pont_(patron_de_conception))
 * [Proxy pattern](https://fr.wikipedia.org/wiki/Proxy_(patron_de_conception))
