@@ -156,10 +156,10 @@ Ainsi il est possible de diviser le service LibraryService en trois services :
 * **BorrowingService** : un service de gestion des emprunts
 
 
-#### Classe BookService2
+#### Classe BookService
 Cette interface regroupe les méthodes liées à la gestion des livres au niveau global de la bibliothèque.
 ```java
-public interface BookService2 {
+public interface BookService {
 
     Set<Book> getAllBooks();
 
@@ -173,11 +173,11 @@ public interface BookService2 {
 ``` 
 
 
-#### Classe BorrowingService2
+#### Classe BorrowingService
 Cette interface regroupe les méthodes liées à la gestion de l'emprunt et du retour des livres
 
 ```java
-public interface BorrowingService2 {
+public interface BorrowingService {
 
     Set<Book> getAvailableBooks();
 
@@ -194,10 +194,10 @@ public interface BorrowingService2 {
 ```
 
 
-#### Classe ClientService2
+#### Classe ClientService
 Cette interface regroupe les méthodes liées à la gestion des adhérents. 
 ```java
-public interface ClientService2 {
+public interface ClientService {
 
     void registerClient(Client client) throws ClientAlreadyRegisteredException;
 
@@ -219,7 +219,7 @@ Le service BorrowingService est dédié à la gestion des emprunts, c'est-à-dir
 un livre.
 
 Chaque interface porte sur un périmètre clair et restreint.
-L'usage, l'implémentation et la maintenance de chacune en est facilité.
+L'usage, l'implémentation et la maintenance de chacune en sont facilités.
 
 
 
@@ -227,13 +227,11 @@ L'usage, l'implémentation et la maintenance de chacune en est facilité.
 
 Le principe de séparation des responsabilités peut s'appliquer à l'implémentation d'une méthode pour la rendre plus 
 lisible.
-Il s'agit de faire en sorte que chaque ligne de code de la méthode fasse une seule et unique chose. Pour cela il y 
+Il s'agit de faire en sorte que chaque ligne de code de la méthode fasse une seule et unique chose. Pour cela il 
 existe plusieurs stratégies, dont les plus usitées sont :
 * créer une méthode regroupant le code portant sur le même sujet
 * nommer des variables avec un nom explicite
- 
-
-faciliter la réutilisation en créant des méthodes qui font une action précise et qui est clairement portée par leur nom.
+* faciliter la réutilisation en créant des méthodes qui font une action précise et qui est clairement portée par leur nom.
 
 ### Situation initiale
 La classe BorrowingService contient une méthode *isMaximumBookBorrowed* qui fournit le nombre de livres empruntés par un
@@ -280,7 +278,7 @@ C'est là que le principe de SoC peut aider.
 
 ### Application du principe du SoC
 
-L'application du SoC dans cet exemple vise découper cette méthode en plusieurs méthodes, chacune portant une 
+L'application du SoC dans cet exemple vise à découper cette méthode en plusieurs méthodes, chacune portant une 
 responsabilité distincte des autres.
 
 Comme noté dans l'analyse de la section précédente, il y a 3 notions essentielles :
@@ -348,9 +346,9 @@ Ainsi il est compréhensible par un utilisateur.
 
 ### Situation initiale
 
-La méthode *borrowBook(Book,Client)* permet à un client d'emprunter un libre de la bibliothèque.
+La méthode *borrowBook(Book,Client)* permet à un client d'emprunter un livre de la bibliothèque.
 Elle est décomposée en plusieurs étapes :
-* vérifier que le livre existe dans la librairie et n'a pas été déjà emprunté.
+* vérifier que le livre existe dans la bibliothèque et n'a pas été déjà emprunté.
 * vérifier que le client est enregistré auprès de la bibliothèque
 * enregistrer que le livre a été emprunté par le client 
 
@@ -395,7 +393,7 @@ public class LibraryService {
 L'implémentation initiale est correctement codée, de taille moyenne et passe les outils de qualimétrie automatique.
 Cette implémentation, bien que s'exécutant parfaitement, est peu lisible et mélange du code fonctionnel avec du code 
 technique. 
-Par exemple l'usage de l'API stream en plein milieu casse complètement la lecture. De déterminer le processus 
+Par exemple l'usage de l'API stream en plein milieu casse complètement la lecture. Déterminer le processus 
 fonctionnel contenu dans la méthode est difficile et demande une bonne concentration. 
 En résumé, la compréhension et la maintenabilité de ce morceau de code sont médiocres. 
 
@@ -503,7 +501,7 @@ En bref, l'usage, l'implémentation, la réutilisation et la maintenance du code
 
 La séparation des responsabilités s'applique également au niveau de l'architecture. 
 Selon sa nature, une architecture est décomposée en couches ou en composants (ex: BDD).
-Dans la suite du chapitre , afin de simplifier la lecture, il sera question uniquement du cas de l'architecture en couche, mais 
+Dans la suite du chapitre, afin de simplifier la lecture, il sera question uniquement du cas de l'architecture en couche, mais 
 tous les principes présentés s'appliquent de la même façon à une architecture en composants.
 
 Chaque couche doit avoir une responsabilité précise et il est nécessaire d'avoir le bon niveau de séparation des couches 
@@ -571,9 +569,9 @@ public class LibraryRestService {
 Le code est de bonne qualité, les méthodes sont concises et claires. 
 Mais il y a tout de même un cas où le code n'est pas optimal.
 
-Imaginons que le service de fourniture de la liste des livres doit être aussi disponible sous un autre protocole (XMPP, 
+Imaginons que le service de fourniture de la liste des livres doive être aussi disponible sous un autre protocole (XMPP, 
 SOAP, ...) ou sous une nouvelle version (ex: nouveau path avec contenu au format CSV ou XML ou JSON différent, etc.).
-Attention, il ne s'agit pas du remplacement du service existant mais d'ajouter un service équivalent joignable via un
+Attention, il ne s'agit pas du remplacement du service existant mais de l'ajout d'un service équivalent joignable via un
 moyen technique différent. 
 Il faudrait dupliquer une partie de ce code :
 * la méthode *getAvailableBookSet()* systématiquement
