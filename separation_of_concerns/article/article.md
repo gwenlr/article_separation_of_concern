@@ -34,11 +34,11 @@ En développement logiciel, la *séparation des responsabilités* vise à décou
 sous-programmes où chaque sous-programme a la responsabilité de traiter un aspect du programme. 
 Il en est de même pour chaque sous-programme qui est divisé en *sous-sous-programme* et ainsi de suite.
 
-D'un premier abord, cette découpe parait simple, cependant la vraie difficulté de tout cela réside dans la façon de 
+D'un premier abord, cette découpe paraît simple, cependant la vraie difficulté de tout cela réside dans la façon de 
 découper.
 En effet, il faut attribuer à chaque composant d'un niveau une responsabilité claire, et à chaque composant de 
 niveau inférieur, il faut donner un morceau de la responsabilité supérieure tout en s'assurant que toutes ces 
-responsabilités de niveau inférieure sont cohérentes entre elles. Et ainsi de suite à chaque niveau. 
+responsabilités de niveau inférieur sont cohérentes entre elles. Et ainsi de suite à chaque niveau. 
 
 ![Découpe arborescente](images/image-01.png)
 
@@ -53,8 +53,8 @@ En langage Java, la subdivision des composants est la suivante
 * package
 * class
 * method
-Cela signifie qu'une *application* est composée d'un plusieurs *module*, que chaque *module* est composé d'un ou plus 
-*package*, que chaque *package* est composé d'une ou plusieurs *class*, que chaque *class* est composé d'une ou 
+Cela signifie qu'une *application* est composée d'un ou plusieurs *module*, que chaque *module* est composé d'un ou plus 
+*package*, que chaque *package* est composé d'une ou plusieurs *class*, que chaque *class* est composée d'une ou 
 plusieurs *method*.
 
 Bien entendu, cette division est déclinable à différentes échelles. 
@@ -65,7 +65,7 @@ Ainsi pour un système logiciel _simplifié_, cette division est :
 * etc
 
 Les exemples des chapitres suivants présentent des cas concrets de code ne respectant pas le principe de la séparation
-des responsabilités, une analyse des problèmes qui en découlent et une proposition résolution de ces problèmes à l'aide
+des responsabilités, une analyse des problèmes qui en découlent et une proposition de résolution de ces problèmes à l'aide
 de l'application du principe. 
 
 Il est important de conserver en mémoire les points suivants à propos des exemples : 
@@ -76,7 +76,7 @@ Il est important de conserver en mémoire les points suivants à propos des exem
 
 ## Exemple d'application 1 : séparation des sujets
 
-Cet exemple illustre l'application du concept pour distinguer les sujets traités dans composant en un ensemble de 
+Cet exemple illustre l'application du concept pour distinguer les sujets traités en un ensemble de 
 composants traitant chacun un seul et unique sujet. 
 
 Le code de cet exemple est basé sur un service de gestion de bibliothèque. 
@@ -139,7 +139,7 @@ Une première observation rapide permet de constater que ce service est constitu
 Ce qui en fait un service plutôt étoffé, et son implémentation doit être volumineuse, voire complexe.
 
 Une observation plus détaillée du service permet de constater que les méthodes portent sur des entités différentes 
-(Livre, client, emprunts) et portent sur des tâches métier différentes (récupération, enregistrement, vérification, 
+(livres, clients, emprunts) et portent sur des tâches métier différentes (récupération, enregistrement, vérification, 
 etc.). 
 Cela implique que l'implémentation sera complexe à écrire et à lire, car chaque méthode pourra avoir un contexte très
 différent de la suivante.
@@ -156,10 +156,10 @@ Ainsi il est possible de diviser le service LibraryService en trois services :
 * **BorrowingService** : un service de gestion des emprunts
 
 
-#### Classe BookService2
+#### Classe BookService
 Cette interface regroupe les méthodes liées à la gestion des livres au niveau global de la bibliothèque.
 ```java
-public interface BookService2 {
+public interface BookService {
 
     Set<Book> getAllBooks();
 
@@ -173,11 +173,11 @@ public interface BookService2 {
 ``` 
 
 
-#### Classe BorrowingService2
+#### Classe BorrowingService
 Cette interface regroupe les méthodes liées à la gestion de l'emprunt et du retour des livres
 
 ```java
-public interface BorrowingService2 {
+public interface BorrowingService {
 
     Set<Book> getAvailableBooks();
 
@@ -194,10 +194,10 @@ public interface BorrowingService2 {
 ```
 
 
-#### Classe ClientService2
+#### Classe ClientService
 Cette interface regroupe les méthodes liées à la gestion des adhérents. 
 ```java
-public interface ClientService2 {
+public interface ClientService {
 
     void registerClient(Client client) throws ClientAlreadyRegisteredException;
 
@@ -219,7 +219,7 @@ Le service BorrowingService est dédié à la gestion des emprunts, c'est-à-dir
 un livre.
 
 Chaque interface porte sur un périmètre clair et restreint.
-L'usage, l'implémentation et la maintenance de chacune en est facilité.
+L'usage, l'implémentation et la maintenance de chacune en sont facilités.
 
 
 
@@ -227,13 +227,11 @@ L'usage, l'implémentation et la maintenance de chacune en est facilité.
 
 Le principe de séparation des responsabilités peut s'appliquer à l'implémentation d'une méthode pour la rendre plus 
 lisible.
-Il s'agit de faire en sorte que chaque ligne de code de la méthode fasse une seule et unique chose. Pour cela il y 
+Il s'agit de faire en sorte que chaque ligne de code de la méthode fasse une seule et unique chose. Pour cela il 
 existe plusieurs stratégies, dont les plus usitées sont :
 * créer une méthode regroupant le code portant sur le même sujet
 * nommer des variables avec un nom explicite
- 
-
-faciliter la réutilisation en créant des méthodes qui font une action précise et qui est clairement portée par leur nom.
+* faciliter la réutilisation en créant des méthodes qui font une action précise et qui est clairement portée par leur nom.
 
 ### Situation initiale
 La classe BorrowingService contient une méthode *isMaximumBookBorrowed* qui fournit le nombre de livres empruntés par un
@@ -280,7 +278,7 @@ C'est là que le principe de SoC peut aider.
 
 ### Application du principe du SoC
 
-L'application du SoC dans cet exemple vise découper cette méthode en plusieurs méthodes, chacune portant une 
+L'application du SoC dans cet exemple vise à découper cette méthode en plusieurs méthodes, chacune portant une 
 responsabilité distincte des autres.
 
 Comme noté dans l'analyse de la section précédente, il y a 3 notions essentielles :
@@ -348,9 +346,9 @@ Ainsi il est compréhensible par un utilisateur.
 
 ### Situation initiale
 
-La méthode *borrowBook(Book,Client)* permet à un client d'emprunter un libre de la bibliothèque.
+La méthode *borrowBook(Book,Client)* permet à un client d'emprunter un livre de la bibliothèque.
 Elle est décomposée en plusieurs étapes :
-* vérifier que le livre existe dans la librairie et n'a pas été déjà emprunté.
+* vérifier que le livre existe dans la bibliothèque et n'a pas été déjà emprunté.
 * vérifier que le client est enregistré auprès de la bibliothèque
 * enregistrer que le livre a été emprunté par le client 
 
@@ -395,7 +393,7 @@ public class LibraryService {
 L'implémentation initiale est correctement codée, de taille moyenne et passe les outils de qualimétrie automatique.
 Cette implémentation, bien que s'exécutant parfaitement, est peu lisible et mélange du code fonctionnel avec du code 
 technique. 
-Par exemple l'usage de l'API stream en plein milieu casse complètement la lecture. De déterminer le processus 
+Par exemple l'usage de l'API stream en plein milieu casse complètement la lecture. Déterminer le processus 
 fonctionnel contenu dans la méthode est difficile et demande une bonne concentration. 
 En résumé, la compréhension et la maintenabilité de ce morceau de code sont médiocres. 
 
@@ -499,11 +497,11 @@ En bref, l'usage, l'implémentation, la réutilisation et la maintenance du code
 
 
 
-# Example 4: Séparation de couches
+## Example 4: Séparation de couches
 
 La séparation des responsabilités s'applique également au niveau de l'architecture. 
 Selon sa nature, une architecture est décomposée en couches ou en composants (ex: BDD).
-Dans la suite du chapitre , afin de simplifier la lecture, il sera question uniquement du cas de l'architecture en couche, mais 
+Dans la suite du chapitre, afin de simplifier la lecture, il sera question uniquement du cas de l'architecture en couche, mais 
 tous les principes présentés s'appliquent de la même façon à une architecture en composants.
 
 Chaque couche doit avoir une responsabilité précise et il est nécessaire d'avoir le bon niveau de séparation des couches 
@@ -571,16 +569,16 @@ public class LibraryRestService {
 Le code est de bonne qualité, les méthodes sont concises et claires. 
 Mais il y a tout de même un cas où le code n'est pas optimal.
 
-Imaginons que le service de fourniture de la liste des livres doit être aussi disponible sous un autre protocole (XMPP, 
+Imaginons que le service de fourniture de la liste des livres doive être aussi disponible sous un autre protocole (XMPP, 
 SOAP, ...) ou sous une nouvelle version (ex: nouveau path avec contenu au format CSV ou XML ou JSON différent, etc.).
-Attention, il ne s'agit pas du remplacement du service existant mais d'ajouter un service équivalent joignable via un
+Attention, il ne s'agit pas du remplacement du service existant mais de l'ajout d'un service équivalent joignable via un
 moyen technique différent. 
 Il faudrait dupliquer une partie de ce code :
 * la méthode *getAvailableBookSet()* systématiquement
 * les méthodes *toJson* quand le format technique des données est le même.
 
 De plus, la méthode *getAvailableBookSet()* diffère des autres par son implémentation qui est purement métier, alors que
-les autres méthodes sont des méthodes techniques liés au protocole REST.
+les autres méthodes sont des méthodes techniques liées au protocole REST.
 
 Bref, ce code n'est pas suffisamment réutilisable. 
 
@@ -593,7 +591,7 @@ Comme vu dans l'analyse, la réutilisation n'est pas optimale pour deux raisons�
 
 Le mélange de code métier et technique est résolu en déplaçant ce code dans un couple interface / classe 
 d'implémentation.
-Le mélange code de service et code de formatage est résolu par le déplacement du code de formattage dans une classe 
+Le mélange code de service et code de formatage est résolu par le déplacement du code de formatage dans une classe 
 finale de type helper.
 
 #### La couche métier
@@ -686,7 +684,7 @@ l'architecture logicielle.
 
 D'un premier abord, le concept de "Separation of concern" peut sembler plutôt facile à appréhender puisqu'il "suffit de
 trier les choux des carottes".
-Mais dans sa mise en pratique, ce n'est toujours évident et pour certains cas il faudra parfois se reprendre à plusieurs
+Mais dans sa mise en pratique, ce n'est toujours évident et pour certains cas il faudra parfois s'y reprendre à plusieurs
 fois pour affiner le découpage.
 
 Dans les exemples de cet article, nous avons vu différents aspects pratiques de l'application du SoC :
@@ -695,7 +693,7 @@ Dans les exemples de cet article, nous avons vu différents aspects pratiques de
 * la séparation entre le fonctionnel et le technique
 * la séparation entre couches
 
-La notion de séparation of concerns se retrouve également dans différents design patterns du Gang of Four dont, par 
+La notion de separation of concerns se retrouve également dans différents design patterns du Gang of Four dont, par 
 exemple :
 * [Bridge pattern](https://fr.wikipedia.org/wiki/Pont_(patron_de_conception))
 * [Proxy pattern](https://fr.wikipedia.org/wiki/Proxy_(patron_de_conception))
