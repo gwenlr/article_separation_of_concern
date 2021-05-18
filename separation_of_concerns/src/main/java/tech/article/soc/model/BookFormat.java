@@ -1,7 +1,5 @@
 package tech.article.soc.model;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * The format of a book based on ISO 216 and ISO 269
  */
