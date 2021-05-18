@@ -9,7 +9,6 @@ group 'tech.article'
 version '1.0-SNAPSHOT'
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
@@ -33,5 +32,5 @@ test {
 }
 
 wrapper {
-    gradleVersion = '6.8.3'
+    gradleVersion = '7.0.2'
 }
