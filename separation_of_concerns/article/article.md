@@ -32,7 +32,7 @@ Le concept de **Separation of Concerns** ou **SoC** a été décrit par E.W. Dij
 
 En développement logiciel, la *séparation des responsabilités* vise à découper un programme en un ensemble de 
 sous-programmes où chaque sous-programme a la responsabilité de traiter un aspect du programme. 
-Il en est de même pour chaque sous-programme qui est divisé en *sous-sous-programme* et ainsi de suite.
+Il en est de même pour chaque sous-programme qui est divisé en *composants* et ainsi de suite.
 
 D'un premier abord, cette découpe paraît simple, cependant la vraie difficulté de tout cela réside dans la façon de 
 découper.
@@ -73,11 +73,12 @@ Il est important de conserver en mémoire les points suivants à propos des exem
 * les interfaces/classes utilisées comme dépendances (ie fournisseur de service) sont supposées externes au projet (API)
   et donc non modifiables
 * les types de bases sont fortement typés afin de clarifier au maximum le code
+* les commentaires ont été supprimés dans les exemples pour en réduire leur longueur
 
 ## Exemple d'application 1 : séparation des sujets
 
-Cet exemple illustre l'application du concept pour distinguer les sujets traités en un ensemble de 
-composants traitant chacun un seul et unique sujet. 
+Cet exemple illustre l'application du concept pour distinguer les sujets traités en un ensemble de composants traitant 
+chacun un seul et unique sujet. 
 
 Le code de cet exemple est basé sur un service de gestion de bibliothèque. 
 Ce service est représenté par l'interface **LibraryService** contenant un ensemble de méthodes de gestion d'une 
@@ -143,6 +144,14 @@ Une observation plus détaillée du service permet de constater que les méthode
 etc.). 
 Cela implique que l'implémentation sera complexe à écrire et à lire, car chaque méthode pourra avoir un contexte très
 différent de la suivante.
+
+De plus, la réutilisabilité du service sera fortement limitée car il faudra reprendre l'ensemble des méthodes.
+Par exemple, si l'on souhaite réutiliser cette interface pour gérer simplement une collection de livres, cela impliquera
+soit d'y incorporer le concept de client et d'emprunt, soit de neutraliser l'usage de ces méthodes (par exemple en 
+levant une exception **java.lang.UnsupportedOperationException**).
+
+
+
 
 Bref, cette version du service fonctionne mais elle ne sera pas très aisée à utiliser, ni à implémenter. 
 Par voie de conséquence, elle est plus difficile à maintenir et à faire évoluer.
@@ -223,7 +232,7 @@ L'usage, l'implémentation et la maintenance de chacune en sont facilités.
 
 
 
-## Example 2 : diminuer la complexité du code
+## Exemple d'application 2 : diminuer la complexité du code
 
 Le principe de séparation des responsabilités peut s'appliquer à l'implémentation d'une méthode pour la rendre plus 
 lisible.
@@ -234,8 +243,8 @@ existe plusieurs stratégies, dont les plus usitées sont :
 * faciliter la réutilisation en créant des méthodes qui font une action précise et qui est clairement portée par leur nom.
 
 ### Situation initiale
-La classe BorrowingService contient une méthode *isMaximumBookBorrowed* qui fournit le nombre de livres empruntés par un
-client.
+La classe BorrowingService contient une méthode *isMaximumBookBorrowed* qui indique que le nombre de livres, empruntés 
+par le client, est au maximum.
 
 Voici la première implémentation :
 ```java
@@ -329,13 +338,15 @@ traités dans la méthode.
 
 La nouvelle version du code contient 3 méthodes au lieu d'une seule. Les 2 méthodes supplémentaires sont concises, claires
 et portent sur une seule action. 
-Outre le fait d'obtenir une méthode plus claire, ce refactoring permet d'avoir deux nouvelles méthodes réutilisables.  
+Outre le fait d'obtenir une méthode plus claire, ce refactoring permet d'avoir deux nouvelles méthodes réutilisables.
+Il faut souligner que les méthodes ajoutées sont internes à l'implémentation et n'impactent pas l'interface.
+
 
 L'usage, l'implémentation et la maintenance de ce code sont facilités.
 
 
 
-## Exemple 3: mélange fonctionnel et technique
+## Exemple d'application 3 : mélange fonctionnel et technique
 
 Le principe de la séparation des responsabilités s'applique également sur le découpage du code pour distinguer le code 
 fonctionnel du code technique.
@@ -493,14 +504,26 @@ Ces nouvelles méthodes sont concises, claires et facilement réutilisables.
 La méthode fonctionnelle *borrowBook* est constituée uniquement de code fonctionnel et sa lisibilité est immédiate.
 Elle peut même être comprise par une personne qui n'est pas développeur.
 
+Le pendant de cette simplicité du contenu de chaque méthode est la complexité croissante de l'implémentation par la 
+multiplication du nombre de méthodes. 
+C'est un problème inhérent au développement et est un sujet de discussion récurrent entre les développeurs :
+petites méthodes simples mais nombreuses contre grosses méthodes rares mais complexes.
+Bien entendu, il n'y a pas de réponse tranchée à ce sujet.
+Le tout est une question d'équilibre en se focalisant d'abord sur la lisibilité du code. 
+Il est impératif que chaque méthode créée possède un périmètre clair et que son nom le reflète exactement.
+En d'autres termes, il faut que chacune de ces méthodes soit simple.
+Or, la simplicité est complexe à créer et il ne faudra pas hésiter pas passer du temps pour concevoir ces refactorings,
+tant du point de vue de l'implémentation que de la dénomination des méthodes.
+
+
 En bref, l'usage, l'implémentation, la réutilisation et la maintenance du code sont facilités.
 
 
 
-## Example 4: Séparation de couches
+## Exemple d'application 4 : Séparation de couches
 
 La séparation des responsabilités s'applique également au niveau de l'architecture. 
-Selon sa nature, une architecture est décomposée en couches ou en composants (ex: BDD).
+Selon sa nature, une architecture est décomposée en couches ou en composants (ex : les bases de données).
 Dans la suite du chapitre, afin de simplifier la lecture, il sera question uniquement du cas de l'architecture en couche, mais 
 tous les principes présentés s'appliquent de la même façon à une architecture en composants.
 
@@ -667,8 +690,6 @@ public final class BookJsonHelper {
 }
 ```
 
-
-
 ### Conclusion
 L'application du principe a permis une première séparation claire entre la couche REST et la couche métier.
 Cela permet la réutilisation de la couche métier.
@@ -676,8 +697,353 @@ Cela permet la réutilisation de la couche métier.
 La seconde séparation mise en oeuvre est la mise en commun des méthodes conversion des objets métier en objets JSON.
 Cela permettra de réutiliser ces méthodes dans d'autres services REST qui manipuleraient des objets identiques.
 
-A la différence des précédents exemples, l'application du principe permet de changer de dimension en faisant évoluer 
+A la différence des précédents exemples, l'application du principe permet de changer de dimension en faisant évoluer
 l'architecture logicielle.
+
+
+
+
+## Exemple d'application 5 : No silver bullet
+Tout concept a ses limites et "Separation of concern" n'échappe pas à la règle. 
+Une application trop stricte ou dans un contexte qui ne s'y prête pas même à la dégradation du code, entrainant des 
+effets néfastes sur sa lisibilité, sa maintenance, et autres problèmes.
+
+Dans ce chapitre, nous opterons pour une approche inverse, à savoir étudier le code refactorisé puis le code initial,
+avant d'en faire une critique.
+
+### Le résultat de l'application du principe du SoC
+
+Le code après application du principe du SoC est décrit dans la section suivante.
+
+```java
+public class BookReceptionService2Impl implements BookReceptionService {
+
+    private static final int WRITING_CREATION_YEAR = -7000;
+
+    private BookRestorationService bookRestorationService;
+    private BookConverter bookConverter;
+    private BookService bookService;
+
+    @Override
+    public void receiveNewBook(@NotNull NewBookDTO newBook) {
+        checkBookCorrectlyFilled(newBook);
+        DetailedBook detailedBook = convertToDetailedBook(newBook);
+        processNewBook(detailedBook);
+    }
+
+
+    private void checkBookCorrectlyFilled(@NotNull NewBookDTO newBook) {
+        checkAuthor(newBook);
+        checkTitle(newBook);
+        checkPublicationHouse(newBook);
+        checkPublication(newBook);
+        checkFormat(newBook);
+        checkPageCount(newBook);
+        checkState(newBook);
+    }
+
+    private void checkAuthor(@NotNull NewBookDTO newBook) {
+        if (newBook.getAuthor() == null || newBook.getAuthor().isBlank()) {
+            throw new IllegalArgumentException("The author field is missing or is blank");
+        }
+    }
+
+    private void checkTitle(@NotNull NewBookDTO newBook) {
+        if (newBook.getTitle() == null || newBook.getTitle().isBlank()) {
+            throw new IllegalArgumentException("The title field is missing or is blank");
+        }
+    }
+
+    private void checkPublicationHouse(@NotNull NewBookDTO newBook) {
+        if (newBook.getPublishingHouse() == null || newBook.getPublishingHouse().isBlank()) {
+            throw new IllegalArgumentException("The publishingHouse field is missing or is blank");
+        }
+    }
+
+    private void checkPublication(@NotNull NewBookDTO newBook) {
+        checkInitialPublicationIsNotTooOld(newBook);
+        checkCurrentPublicationCoherentWithInitialPublication(newBook);
+    }
+
+    private void checkInitialPublicationIsNotTooOld(@NotNull NewBookDTO newBook) {
+        if (newBook.getInitialPublicationYear() < WRITING_CREATION_YEAR) {
+            throw new IllegalArgumentException("The initialPublicationYear field is invalid, the writing didnt exist at this time");
+        }
+    }
+
+    private void checkCurrentPublicationCoherentWithInitialPublication(@NotNull NewBookDTO newBook) {
+        if (newBook.getCurrentPublicationYear() < newBook.getInitialPublicationYear()) {
+            throw new IllegalArgumentException("The currentPublicationYear field shall not be lower than the initialPublicationYear");
+        }
+    }
+
+    private void checkFormat(@NotNull NewBookDTO newBook) {
+        checkFormatFilled(newBook);
+        checkFormatHasValidValue(newBook);
+    }
+
+    private void checkFormatFilled(@NotNull NewBookDTO newBook) {
+        if (newBook.getFormat() == null) {
+            throw new IllegalArgumentException("The format of the book is missing");
+        }
+    }
+
+    private void checkFormatHasValidValue(@NotNull NewBookDTO newBook) {
+        try {
+            BookFormat.valueOf(newBook.getFormat());
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("The format is unknown");
+        }
+    }
+
+    private void checkPageCount(@NotNull NewBookDTO newBook) {
+        if (newBook.getPageCount() < 5) {
+            throw new IllegalArgumentException("The number of pages is too low. The minimal page count is 5");
+        }
+    }
+
+    private void checkState(@NotNull NewBookDTO newBook) {
+        checkStateFilled(newBook);
+        checkStateHasValidValue(newBook);
+    }
+
+    private void checkStateFilled(@NotNull NewBookDTO newBook) {
+        if (newBook.getState() == null) {
+            throw new IllegalArgumentException("The state of the book is missing");
+        }
+    }
+
+    private void checkStateHasValidValue(@NotNull NewBookDTO newBook) {
+        try {
+            BookState.valueOf(newBook.getState());
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("The state of the book is unknown");
+        }
+    }
+
+    @NotNull
+    private DetailedBook convertToDetailedBook(@NotNull NewBookDTO newBook) {
+        return bookConverter.convertToDetailedBook(newBook);
+    }
+
+    private void processNewBook(DetailedBook detailedBook) {
+        if (detailedBook.getState() == BookState.DAMAGED) {
+            bookRestorationService.submit(detailedBook);
+        } else {
+            bookService.registerNewBook(detailedBook);
+        }
+    }
+}
+```
+
+Long de 127 lignes, il contient 17 méthodes dont une seule est public et toutes les autres sont privées.
+Chaque méthode est parfaitement lisible, se concentrant sur un sujet et en plus avec une taille réduite (7 lignes au 
+maximum).
+Le SoC a été appliqué et il ne semble n'y avoir rien à dire de ce côté-là.
+
+Cependant, pris dans son ensemble, ce code n'est pas très lisible pour deux principales raisons:
+* la difficulté d'identifier le rôle d'une méthode au sein du processus métier.
+* le (trop) grand nombre de méthodes et la disproportion de leur répartition
+
+La difficulté d'identifier le rôle d'une méthode au sein du processus métier se mesure notamment par la mesure de la 
+profondeur de la pile d'exécution entre le méthode étudiée et la méthode publique appelée (ie qui contient le code du 
+processus métier)
+Plus la pile d'exécution est profonde, moins il est aisé de comprendre la contribution de la méthode étudiée. 
+Par exemple, la méthode *checkCurrentPublicationCoherentWithInitialPublication()* est appelée par la méthode 
+*checkPublication()*, qui est appelée par *checkBookCorrectlyFilled* et qui est appelée par *receiveNewBook()*.
+
+
+
+### L'analyse du code
+Le code contient un grand nombre de méthodes (17) avec plusieurs disproportions dans leur répartition.
+La première disproportion est la répartition par opérateur de portée :
+* 1 méthode *public*
+* 16 méthodes *private*
+
+Ainsi a seule méthode *public* nécessite 16 méthodes *private*.
+Un tel déséquilibre peut indiquer que la méthode publique est soit très complexe soit gère trop de choses.
+
+
+La seconde disproportion concerne dans les sujets traités dans les méthodes :
+* 1 méthode contenant le processus métier
+* 14 méthodes de validation (ie les méthodes commençant 'check'),
+* 1 méthode de conversion
+* 1 méthode de sous-traitance de processing
+
+Ainsi, plus de 82% (14/17) des méthodes portent sur le même sujet, la validation de l'argument de la méthode *public*.
+Ici aussi, le déséquilibre constaté indique que ce sujet est largement prépondérant par rapport aux autres.
+
+### Amélioration du code
+
+La principale origine de ces déséquilibres est la présence massive de la validation de l'objet de type *NewBookDTO*.
+Pour améliorer la situation, il faut déplacer le code de validation dans une classe dédiée à la validation du DTO.
+Cela permettra de remplacer les 14 méthodes de validation par une seule qui appellera une méthode *public* de la classe
+nouvellement créée.
+Ainsi, dans le premier cas, le ratio de méthodes *public* par rapport aux méthodes *private* passera de 1/16 à 1/2.
+Et dans le deuxième cas, il n'y aura plus que 3 méthodes : 
+* 1 méthode contenant le processus métier
+* 1 méthode de conversion
+* 1 méthode de sous-traitance de processing
+
+Le résultat pour la nouvelle classe d'implémentation sera :
+```java
+public class BookReceptionService3Impl implements BookReceptionService {
+
+
+    private BookRestorationService bookRestorationService;
+    private BookConverter bookConverter;
+    private BookService bookService;
+
+    @Override
+    public void receiveNewBook(@NotNull NewBookDTO newBook) {
+      BookDTOValidator.checkBookCorrectlyFilled(newBook);
+        DetailedBook detailedBook = convertToDetailedBook(newBook);
+        processNewBook(detailedBook);
+    }
+
+
+    @NotNull
+    private DetailedBook convertToDetailedBook(@NotNull NewBookDTO newBook) {
+        return bookConverter.convertToDetailedBook(newBook);
+    }
+
+    private void processNewBook(DetailedBook detailedBook) {
+        if (detailedBook.getState() == BookState.DAMAGED) {
+            bookRestorationService.submit(detailedBook);
+        } else {
+            bookService.registerNewBook(detailedBook);
+        }
+    }
+}
+```
+
+Le déséquilibre retiré de cette implémentation va naturellement se reporter sur la classe *NewBookDTOValidator* et 
+l'impression peut être que rien n'a changé.
+Ce n'est pas exact.
+Avec cette nouvelle conception, la nouvelle classe *BookDTOValidator* est construite avec un seul but : valider
+les classes *NewBookDTO* et donc, son contenu, même s'il est volumineux, porte sur un seul sujet.
+Bien entendu, en fonction des besoins, le périmètre de cette classe pourra être élargi à d'autres DTO liés à *NewBookDTO*,
+permettant ainsi la mise en commun des méthodes de validation des champs.
+
+Il est néanmoins possible d'améliorer le contenu de cette classe. 
+
+Tout d'abord on constate que la plupart des méthodes sont basées sur le pattern suivant :
+```text
+if( condition ) {
+    throw new IllegalArgumentException( message );
+}
+```
+Ce pattern est uniquement technique et peut être substitué par les méthodes suivantes :
+* *assertTrue(boolean condition, String message)*
+* *assertNotNull(Object object, String message)*
+* *assertNotBlank(String string, String message)*
+
+De plus, du fait de l'utilisation de ces méthodes techniques, certaines méthodes métiers, découpées en sous-méthodes 
+techniques pour faciliter la lecture, pourront être regroupées en une seule méthode (ie. *checkPublication()*, 
+*checkFormat()*, *checkState()*). 
+
+Enfin, les méthodes techniques *assertXXX()* sont des méthodes génériques qui peuvent être utilisées ailleurs dans le 
+code.
+Elles sont déplaçables dans une classe dédiée commune à tout le projet.
+Mieux, il est possible également d'utiliser des méthodes de ce type disponibles dans des librairies externes (ex: 
+[Apache Commons Lang](https://commons.apache.org/proper/commons-lang/)).
+
+Cela donne le code suivant pour la classe BookDTOValidator :
+```java
+public class BookDTOValidator {
+
+    private static final int WRITING_CREATION_YEAR = -7000;
+
+
+    public static void checkBookCorrectlyFilled(@NotNull NewBookDTO newBook) {
+        checkAuthor(newBook);
+        checkTitle(newBook);
+        checkPublicationHouse(newBook);
+        checkPublication(newBook);
+        checkFormat(newBook);
+        checkPageCount(newBook);
+        checkState(newBook);
+    }
+
+    
+    private static void checkAuthor(@NotNull NewBookDTO newBook) {
+        assertNotBlank(newBook.getAuthor(), "The author field is missing or is blank");
+    }
+
+    
+    private static void checkTitle(@NotNull NewBookDTO newBook) {
+        assertNotBlank(newBook.getTitle(), "The title field is missing or is blank");
+    }
+
+    
+    private static void checkPublicationHouse(@NotNull NewBookDTO newBook) {
+        assertNotBlank(newBook.getPublishingHouse(), "The publishingHouse field is missing or is blank");
+    }
+
+    
+    private static void checkPublication(@NotNull NewBookDTO newBook) {
+        assertTrue(newBook.getInitialPublicationYear() < WRITING_CREATION_YEAR,
+                "The initialPublicationYear field is invalid, the writing didnt exist at this time");
+        assertTrue(newBook.getCurrentPublicationYear() < newBook.getInitialPublicationYear(),
+                "The currentPublicationYear field shall not be lower than the initialPublicationYear");
+    }
+
+    
+    private static void checkFormat(@NotNull NewBookDTO newBook) {
+        assertNotNull(newBook.getFormat(), "The format of the book is missing");
+        try {
+            BookFormat.valueOf(newBook.getFormat());
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("The format is unknown");
+        }
+    }
+
+
+    private static void checkPageCount(@NotNull NewBookDTO newBook) {
+        assertTrue(newBook.getPageCount() >= 5, "The number of pages is too low. The minimal page count is 5");
+    }
+
+    
+    private static void checkState(@NotNull NewBookDTO newBook) {
+        assertNotNull(newBook.getState(), "The state of the book is missing");
+        try {
+            BookState.valueOf(newBook.getState());
+        } catch (Exception ex) {
+            throw new IllegalArgumentException("The state of the book is unknown");
+        }
+    }
+}
+```
+
+Cette nouvelle classe dédiée à la validation de *NewBookDTO* est constituée de 8 méthodes, 1 *public* et 7 *private*.
+Elle est bien plus équilibrée, améliorant la lisibilité et la modularité du code.
+
+### Conclusion
+Le refactoring du code SoC a permis d'améliorer grandement la situation : le nouveau code est plus modulaire et plus 
+lisible.
+Le refactoring a permis de conserver l'esprit SoC tout en redécoupant le code initial qui pourtant avait été fait avec 
+une approche SoC. 
+Ce redécoupage a principalement porté sur la séparation entre le métier et la technique.
+
+Ce qui est à retenir ici, c'est que même en applicant consciencieusement une approche SoC, il est possible de dévoyer 
+le code et d'en faire quelque chose de difficilement exploitable et maintenable.
+
+L'approche SoC n'est pas une *Silver Bullet* et ne résout pas tous les problèmes et peut même faire empirer les choses
+comme vu dans ce chapitre. 
+Un indice important pour détecter un problème : la lisibilité du code. 
+Si le code n'est pas facilement lisible (sauf cas très particuliers, comme les optimisations), alors il y a 
+probablement un problème dans sa conception.
+À cela, pour essayer d'en comprendre l'origine, il faut essayer de faire quelques analyses et mesures supplémentaires. 
+C'est ce qui a été fait ici en mesurant le ratio de méthodes *public* / *private* ou celui des sujets de 
+méthodes.
+Ce ne sont pas les seules mesures possibles, il faut les adapter au code étudié.
+
+Au final, si, après application, l'approche SoC donne un résultat moins satisfaisant que l'état initial du code, alors 
+autant ne pas refactorer le code existant, quitte à y revenir plus tard, avec plus de recul, plus d'expérience ou le 
+support d'un autre développeur.
+
+
+
 
 
 ## So and what else ?
@@ -699,13 +1065,27 @@ exemple :
 * [Proxy pattern](https://fr.wikipedia.org/wiki/Proxy_(patron_de_conception))
 * Etc...
 
-Le premier bénéfice de l'application du SoC est la clarté du code. 
+Le principal bénéfice de l'application du SoC est la clarté du code. 
 En effet en séparant et en découpant le code de manière pertinente, les sujets traités sont bien identifiés et isolés.
 Et donc cela facilite la réutilisation, la maintenance et l'évolution du code.
+
+Le principal écueil à éviter est un morcellement trop important qui mènerait une augmentation artificielle de la 
+complexité du code.
+Le premier signe de cet écueil est la diminution de la lisibilité globale. 
+Il ne faut pas hésiter à réexaminer le code factorisé pour en comprendre l'origine et remettre en cause l'application 
+du SoC.
+
+Comme souvent, tout est une question d'équilibre.
+Le SoC est un outil à utiliser à bon escient. 
+Si, dans une mise en oeuvre particulière, il ne donne pas satisfaction, il ne faut pas hésiter le mettre de côté et 
+revenir à la situation initiale, quitte à y revenir plus tard avec un angle d'approche différent.
 
 
 La notion de "Separation of concern" est tout autant pertinente sur d'autres aspects du logiciel, telle que l'architecture 
 ou le métier et il serait bien dommage de la cantonner au développement.
+
+Et bien entendu, la méthode "Separation of concern" n'est pas la seule permettant d'améliorer le code, il en existe bien
+d'autre qu'il conviendra d'y combiner pour obtenir un code clair et performant.
 
 
 
