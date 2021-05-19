@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 public class ModelLibraryService2Impl implements ModelLibraryService2 {
 
     private final Set<Book> bookSet = new HashSet<>();
-    private final Set<Client> clientSet = new HashSet<>();
     private final Map<Client, Set<Book>> borrowedBookMap = new HashMap<>();
 
     @Override
