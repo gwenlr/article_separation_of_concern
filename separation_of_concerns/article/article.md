@@ -630,6 +630,9 @@ public interface ModelLibraryService2 {
 ```java
 public class ModelLibraryService2Impl implements ModelLibraryService2 {
 
+    private final Set<Book> bookSet;
+    private final Map<Client, Set<Book>> borrowedBookMap;
+
     @Override
     public Set<Book> getAvailableBooks() {
         Set<Book> borrowedBookSet = getBorrowedBooks();
