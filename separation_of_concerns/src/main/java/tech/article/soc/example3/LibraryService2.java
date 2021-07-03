@@ -27,7 +27,7 @@ public class LibraryService2 {
         verifyRegisteredClient(client);
         verifyRegisteredBook(book);
 
-        if (isBookAlreadyBorrowedByClient(book, client))
+        if (isBookBorrowedByClient(book, client))
             return;
 
         verifyBookNotBorrowed(book);
@@ -50,7 +50,7 @@ public class LibraryService2 {
     }
 
 
-    private boolean isBookAlreadyBorrowedByClient(@NotNull Book book, @NotNull Client client) {
+    private boolean isBookBorrowedByClient(@NotNull Book book, @NotNull Client client) {
         Set<Book> borrowedBookSet = borrowedBookMap.getOrDefault(client, Collections.emptySet());
         return borrowedBookSet.contains(book);
     }

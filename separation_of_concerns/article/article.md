@@ -4,19 +4,19 @@
 Lors d'un cours ou d'une formation, l'enseignant formateur présente les principaux concepts du développement logiciel.
 Ces concepts très utiles sont souvent abordés brièvement, et il est donc difficile de les appréhender complètement.
 Alors on se promet d'y revenir plus tard lorsque l'on aura un peu plus d'expérience.
-Et puis on oublie.
+Et puis on oublie...
 
 Cet article se veut un petit retour sur un de ces concepts : "Separation of concerns" ou "séparation des 
 responsabilités". 
 Pour cela, il est nécessaire de présenter d'abord le concept et sa déclinaison dans l'informatique. 
-Puis, comme le sujet est la programmation, des exemples d'application du concept sur des extraits de code concret seront
-détaillés.  
+Comme l'article porte sur la programmation, des exemples d'application du concept sur du code seront détaillés.
+
 
 
 ## Concept
 
 Le concept de **Separation of Concerns** ou **SoC** a été décrit par E.W. Dijkstra dans l'article 
-*On the role of scientific thought* publié en 1974 et dont voici l'extrait sur le sujet :
+*On the role of scientific thought*(L1) publié en 1974 et dont voici l'extrait sur le sujet :
 
 > Let me try to explain to you, what to my taste is characteristic for all intelligent thinking. It is, that one is
 > willing to study in depth an aspect of one's subject matter in isolation for the sake of its own consistency, all 
@@ -53,6 +53,7 @@ En langage Java, la subdivision des composants est la suivante
 * package
 * class
 * method
+
 Cela signifie qu'une *application* est composée d'un ou plusieurs *module*, que chaque *module* est composé d'un ou plus 
 *package*, que chaque *package* est composé d'une ou plusieurs *class*, que chaque *class* est composée d'une ou 
 plusieurs *method*.
@@ -148,7 +149,7 @@ différent de la suivante.
 De plus, la réutilisabilité du service sera fortement limitée car il faudra reprendre l'ensemble des méthodes.
 Par exemple, si l'on souhaite réutiliser cette interface pour gérer simplement une collection de livres, cela impliquera
 soit d'y incorporer le concept de client et d'emprunt, soit de neutraliser l'usage de ces méthodes (par exemple en 
-levant une exception **java.lang.UnsupportedOperationException**).
+levant une exception *java.lang.UnsupportedOperationException*).
 
 
 
@@ -240,7 +241,7 @@ Il s'agit de faire en sorte que chaque ligne de code de la méthode fasse une se
 existe plusieurs stratégies, dont les plus usitées sont :
 * créer une méthode regroupant le code portant sur le même sujet
 * nommer des variables avec un nom explicite
-* faciliter la réutilisation en créant des méthodes qui font une action précise et qui est clairement portée par leur nom.
+* faciliter la réutilisation en créant des méthodes qui font une action précise clairement décrite par leur nom.
 
 ### Situation initiale
 La classe BorrowingService contient une méthode *isMaximumBookBorrowed* qui indique que le nombre de livres, empruntés 
@@ -273,7 +274,7 @@ Le code est relativement lisible mais il est nécessaire de le lire avec attenti
 étapes :
 * La vérification du client
    * la non nullité du paramètre client
-   * l'enregistrement du client à la bibliothèque
+   * l'enregistrement effectif du client à la bibliothèque
 * L'obtention du nombre d'ouvrages empruntés par le client
    * L'obtention de la liste des ouvrages empruntés par le client
    * Le comptage de ces ouvrages
@@ -351,14 +352,14 @@ L'usage, l'implémentation et la maintenance de ce code sont facilités.
 Le principe de la séparation des responsabilités s'applique également sur le découpage du code pour distinguer le code 
 fonctionnel du code technique.
 * Le code fonctionnel est du code qui décrit le métier de l'application, en ne manipulant que des objets métiers.
-Ainsi il est compréhensible par un utilisateur. 
-* A la différence, le code technique utilise des objets et des API de bas niveau. 
+Ainsi il doit être compréhensible par un utilisateur. 
+* En revanche, le code technique utilise des objets et des API de bas niveau. 
 
 
 ### Situation initiale
 
 La méthode *borrowBook(Book,Client)* permet à un client d'emprunter un livre de la bibliothèque.
-Elle est décomposée en plusieurs étapes :
+Voici les principales étapes qui la composent :
 * vérifier que le livre existe dans la bibliothèque et n'a pas été déjà emprunté.
 * vérifier que le client est enregistré auprès de la bibliothèque
 * enregistrer que le livre a été emprunté par le client 
@@ -411,7 +412,7 @@ En résumé, la compréhension et la maintenabilité de ce morceau de code sont 
 
 ### Application du principe du SoC
 
-L'application du *Separation of Concern" consiste à faire apparaitre clairement le code fonctionnel dans la fonction et
+L'application du *Separation of Concern* consiste à faire apparaitre clairement le code fonctionnel dans la fonction et
 à déléguer les parties techniques dans d'autres fonctions.
 
 D'un point de vue fonctionnel, le contenu de la méthode est:
@@ -440,7 +441,7 @@ public class LibraryService2 {
     verifyRegisteredClient(client);
     verifyRegisteredBook(book);
 
-    if (isBookAlreadyBorrowedByClient(book, client))
+    if (isBookBorrowedByClient(book, client))
       return;
 
     verifyBookNotBorrowed(book);
@@ -463,7 +464,7 @@ public class LibraryService2 {
   }
 
 
-  private boolean isBookAlreadyBorrowedByClient(Book book, Client client) {
+  private boolean isBookBorrowedByClient(Book book, Client client) {
     Set<Book> borrowedBookSet = borrowedBookMap.getOrDefault(client, Collections.emptySet());
     return borrowedBookSet.contains(book);
   }
@@ -512,7 +513,7 @@ Bien entendu, il n'y a pas de réponse tranchée à ce sujet.
 Le tout est une question d'équilibre en se focalisant d'abord sur la lisibilité du code. 
 Il est impératif que chaque méthode créée possède un périmètre clair et que son nom le reflète exactement.
 En d'autres termes, il faut que chacune de ces méthodes soit simple.
-Or, la simplicité est complexe à créer et il ne faudra pas hésiter pas passer du temps pour concevoir ces refactorings,
+Or, la simplicité est complexe à créer et il ne faudra pas hésiter pas à passer du temps pour concevoir ces refactorings,
 tant du point de vue de l'implémentation que de la dénomination des méthodes.
 
 
@@ -595,27 +596,29 @@ Mais il y a tout de même un cas où le code n'est pas optimal.
 Imaginons que le service de fourniture de la liste des livres doive être aussi disponible sous un autre protocole (XMPP, 
 SOAP, ...) ou sous une nouvelle version (ex: nouveau path avec contenu au format CSV ou XML ou JSON différent, etc.).
 Attention, il ne s'agit pas du remplacement du service existant mais de l'ajout d'un service équivalent joignable via un
-moyen technique différent. 
-Il faudrait dupliquer une partie de ce code :
-* la méthode *getAvailableBookSet()* systématiquement
-* les méthodes *toJson* quand le format technique des données est le même.
+moyen technique différent.
+Comme ce nouveau service sera dans une autre classe dédiée (Application du **SoC**), par exemple *LibrarySoapService*, 
+il faudra dupliquer une partie du code de *LibraryRestService* :
+* la méthode *getAvailableBookSet()* à dupliquer systématiquement
+* les méthodes *toJson* à dupliquer si le format technique des données est le même.
 
-De plus, la méthode *getAvailableBookSet()* diffère des autres par son implémentation qui est purement métier, alors que
-les autres méthodes sont des méthodes techniques liées au protocole REST.
+Il est à noter que la méthode *getAvailableBookSet()* diffère des autres car son implémentation qui est purement métier, 
+alors que les autres méthodes sont des méthodes techniques liées au protocole REST.
 
 Bref, ce code n'est pas suffisamment réutilisable. 
 
 
-### Application du principe du SoC
 
+### Application du principe du SoC
 Comme vu dans l'analyse, la réutilisation n'est pas optimale pour deux raisons : 
 * l'insertion de code métier (*getAvailableBookSet()*) dans du code technique
 * l'insertion de code de formatage de données dans du code de service
 
 Le mélange de code métier et technique est résolu en déplaçant ce code dans un couple interface / classe 
 d'implémentation.
+
 Le mélange code de service et code de formatage est résolu par le déplacement du code de formatage dans une classe 
-finale de type helper.
+finale de type *helper*.
 
 #### La couche métier
 La couche métier, qui reprend le code de la méthode *getAvailableBooks()* est composée de l'interface ModelLibraryService2 
@@ -630,13 +633,14 @@ public interface ModelLibraryService2 {
 ```java
 public class ModelLibraryService2Impl implements ModelLibraryService2 {
 
-    private final Set<Book> bookSet;
+    private BookService bookService;
     private final Map<Client, Set<Book>> borrowedBookMap;
 
     @Override
     public Set<Book> getAvailableBooks() {
         Set<Book> borrowedBookSet = getBorrowedBooks();
-        Set<Book> availableBookSet = new HashSet<>(bookSet);
+        Set<Book> allBooks = bookService.getAllBooks();
+        Set<Book> availableBookSet = new HashSet<>(allBooks);
         availableBookSet.removeAll(borrowedBookSet);
         return availableBookSet;
     }
@@ -652,7 +656,7 @@ public class ModelLibraryService2Impl implements ModelLibraryService2 {
 
 #### La couche REST
 La couche REST dépend de la couche métier à laquelle elle accède via l'interface *ModelLibraryService2*.
-La conversion des objets métier en REST est déportée dans la classe Helper *BookJsonHelper*. 
+La conversion des objets métier en REST est déportée dans la classe *BookJsonHelper*. 
 
 ```java
 public class LibraryRestService2 {
@@ -663,7 +667,7 @@ public class LibraryRestService2 {
     public ResponseEntity<List<BookJson>> getAvailableBooks() {
         Set<Book> availableBookSet = modelLibraryService.getAvailableBooks();
 
-        List<BookJson> orderedJsonBookList = toJson(availableBookSet);
+        List<BookJson> orderedJsonBookList = BookJsonHelper.toJson(availableBookSet);
 
         if( orderedJsonBookList.isEmpty())
             return ResponseEntity.noContent().build();
@@ -695,7 +699,7 @@ public final class BookJsonHelper {
 
 ### Conclusion
 L'application du principe a permis une première séparation claire entre la couche REST et la couche métier.
-Cela permet la réutilisation de la couche métier.
+Cela permet la réutilisation de la fonctionnalité (*getAvailableBooks*) déplacée dans la couche métier.
 
 La seconde séparation mise en oeuvre est la mise en commun des méthodes conversion des objets métier en objets JSON.
 Cela permettra de réutiliser ces méthodes dans d'autres services REST qui manipuleraient des objets identiques.
@@ -707,12 +711,12 @@ l'architecture logicielle.
 
 
 ## Exemple d'application 5 : No silver bullet
-Tout concept a ses limites et "Separation of concern" n'échappe pas à la règle. 
-Une application trop stricte ou dans un contexte qui ne s'y prête pas même à la dégradation du code, entrainant des 
+Tout concept a ses limites et *Separation of concern* n'échappe pas à la règle. 
+Une application trop stricte ou dans un contexte qui ne s'y prête pas mène à la dégradation du code, entrainant des 
 effets néfastes sur sa lisibilité, sa maintenance, et autres problèmes.
 
-Dans ce chapitre, nous opterons pour une approche inverse, à savoir étudier le code refactorisé puis le code initial,
-avant d'en faire une critique.
+Dans ce chapitre, nous opterons pour une approche différente, à savoir faire une analyse critique d'un code refactorisé
+avec une approche *SoC* qui ne donne pas satisfaction, puis voir comment la situation peut être améliorée.
 
 ### Le résultat de l'application du principe du SoC
 
@@ -844,16 +848,16 @@ Chaque méthode est parfaitement lisible, se concentrant sur un sujet et en plus
 maximum).
 Le SoC a été appliqué et il ne semble n'y avoir rien à dire de ce côté-là.
 
-Cependant, pris dans son ensemble, ce code n'est pas très lisible pour deux principales raisons:
+Cependant, pris dans son ensemble, ce code n'est pas très lisible pour, principalement, deux raisons :
 * la difficulté d'identifier le rôle d'une méthode au sein du processus métier.
 * le (trop) grand nombre de méthodes et la disproportion de leur répartition
 
-La difficulté d'identifier le rôle d'une méthode au sein du processus métier se mesure notamment par la mesure de la 
-profondeur de la pile d'exécution entre le méthode étudiée et la méthode publique appelée (ie qui contient le code du 
-processus métier)
-Plus la pile d'exécution est profonde, moins il est aisé de comprendre la contribution de la méthode étudiée. 
-Par exemple, la méthode *checkCurrentPublicationCoherentWithInitialPublication()* est appelée par la méthode 
-*checkPublication()*, qui est appelée par *checkBookCorrectlyFilled* et qui est appelée par *receiveNewBook()*.
+La difficulté d'identifier le rôle d'une méthode au sein du processus métier se mesure notamment par la profondeur de la 
+pile d'exécution entre le méthode étudiée et la méthode publique appelée (ie qui contient le code du processus métier)
+Plus la pile d'exécution est profonde, moins il est aisé de comprendre la contribution de la méthode étudiée.
+Par exemple, le rôle de la méthode *checkCurrentPublicationCoherentWithInitialPublication()* est difficile à appréhender.
+Pour cela il faut la remettre dans son contexte, à savoir qu'elle est appelée par la méthode *checkPublication()*, qui 
+est appelée par *checkBookCorrectlyFilled* et qui est appelée par *receiveNewBook()*.
 
 
 
@@ -863,11 +867,12 @@ La première disproportion est la répartition par opérateur de portée :
 * 1 méthode *public*
 * 16 méthodes *private*
 
-Ainsi a seule méthode *public* nécessite 16 méthodes *private*.
-Un tel déséquilibre peut indiquer que la méthode publique est soit très complexe soit gère trop de choses.
+Ainsi la seule méthode *public* nécessite 16 méthodes *private*.
+Un tel déséquilibre peut indiquer que la méthode publique est soit très complexe soit gère trop de choses, et parfois 
+même les deux.
 
 
-La seconde disproportion concerne dans les sujets traités dans les méthodes :
+La seconde disproportion concerne les sujets traités dans les méthodes :
 * 1 méthode contenant le processus métier
 * 14 méthodes de validation (ie les méthodes commençant 'check'),
 * 1 méthode de conversion
@@ -899,7 +904,7 @@ public class BookReceptionService3Impl implements BookReceptionService {
 
     @Override
     public void receiveNewBook(@NotNull NewBookDTO newBook) {
-      BookDTOValidator.checkBookCorrectlyFilled(newBook);
+        BookDTOValidator.checkBookCorrectlyFilled(newBook);
         DetailedBook detailedBook = convertToDetailedBook(newBook);
         processNewBook(detailedBook);
     }
@@ -943,7 +948,7 @@ Ce pattern est uniquement technique et peut être substitué par les méthodes s
 
 De plus, du fait de l'utilisation de ces méthodes techniques, certaines méthodes métiers, découpées en sous-méthodes 
 techniques pour faciliter la lecture, pourront être regroupées en une seule méthode (ie. *checkPublication()*, 
-*checkFormat()*, *checkState()*). 
+*checkFormat()*, *checkState()*).
 
 Enfin, les méthodes techniques *assertXXX()* sont des méthodes génériques qui peuvent être utilisées ailleurs dans le 
 code.
@@ -1036,7 +1041,7 @@ comme vu dans ce chapitre.
 Un indice important pour détecter un problème : la lisibilité du code. 
 Si le code n'est pas facilement lisible (sauf cas très particuliers, comme les optimisations), alors il y a 
 probablement un problème dans sa conception.
-À cela, pour essayer d'en comprendre l'origine, il faut essayer de faire quelques analyses et mesures supplémentaires. 
+Pour essayer d'en comprendre l'origine, il faut essayer de faire quelques analyses et mesures supplémentaires. 
 C'est ce qui a été fait ici en mesurant le ratio de méthodes *public* / *private* ou celui des sujets de 
 méthodes.
 Ce ne sont pas les seules mesures possibles, il faut les adapter au code étudié.
@@ -1051,10 +1056,10 @@ support d'un autre développeur.
 
 ## So and what else ?
 
-D'un premier abord, le concept de "Separation of concern" peut sembler plutôt facile à appréhender puisqu'il "suffit de
-trier les choux des carottes".
-Mais dans sa mise en pratique, ce n'est toujours évident et pour certains cas il faudra parfois s'y reprendre à plusieurs
-fois pour affiner le découpage.
+D'un premier abord, le concept de **Separation of concern** peut sembler plutôt facile à appréhender puisqu'il "suffit 
+de trier les choux des carottes".
+Mais dans sa mise en pratique, ce n'est pas toujours évident et pour certains cas il faudra parfois s'y reprendre à 
+plusieurs fois pour affiner le découpage.
 
 Dans les exemples de cet article, nous avons vu différents aspects pratiques de l'application du SoC :
 * la découpe de contrat par sujet
@@ -1088,7 +1093,7 @@ La notion de "Separation of concern" est tout autant pertinente sur d'autres asp
 ou le métier et il serait bien dommage de la cantonner au développement.
 
 Et bien entendu, la méthode "Separation of concern" n'est pas la seule permettant d'améliorer le code, il en existe bien
-d'autre qu'il conviendra d'y combiner pour obtenir un code clair et performant.
+d'autres qu'il conviendra de combiner pour obtenir un code clair et performant.
 
 
 

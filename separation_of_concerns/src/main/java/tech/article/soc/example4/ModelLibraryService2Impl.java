@@ -9,14 +9,19 @@ import java.util.stream.Collectors;
 
 public class ModelLibraryService2Impl implements ModelLibraryService2 {
 
-    private final Set<Book> bookSet = new HashSet<>();
+    private BookService bookService;
     private final Map<Client, Set<Book>> borrowedBookMap = new HashMap<>();
+
+    public void setBookService(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @Override
     @NotNull
     public Set<Book> getAvailableBooks() {
         Set<Book> borrowedBookSet = getBorrowedBooks();
-        Set<Book> availableBookSet = new HashSet<>(bookSet);
+        Set<Book> allBooks = bookService.getAllBooks();
+        Set<Book> availableBookSet = new HashSet<>(allBooks);
         availableBookSet.removeAll(borrowedBookSet);
         return availableBookSet;
     }
