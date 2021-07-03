@@ -602,7 +602,7 @@ il faudra dupliquer une partie du code de *LibraryRestService* :
 * la méthode *getAvailableBookSet()* à dupliquer systématiquement
 * les méthodes *toJson* à dupliquer si le format technique des données est le même.
 
-Il est à noter que la méthode *getAvailableBookSet()* diffère des autres car son implémentation qui est purement métier, 
+Il est à noter que la méthode *getAvailableBookSet()* diffère des autres car son implémentation est purement métier, 
 alors que les autres méthodes sont des méthodes techniques liées au protocole REST.
 
 Bref, ce code n'est pas suffisamment réutilisable. 
@@ -853,7 +853,7 @@ Cependant, pris dans son ensemble, ce code n'est pas très lisible pour, princip
 * le (trop) grand nombre de méthodes et la disproportion de leur répartition
 
 La difficulté d'identifier le rôle d'une méthode au sein du processus métier se mesure notamment par la profondeur de la 
-pile d'exécution entre le méthode étudiée et la méthode publique appelée (ie qui contient le code du processus métier)
+pile d'exécution entre le méthode étudiée et la méthode publique appelée (ie qui contient le code du processus métier).
 Plus la pile d'exécution est profonde, moins il est aisé de comprendre la contribution de la méthode étudiée.
 Par exemple, le rôle de la méthode *checkCurrentPublicationCoherentWithInitialPublication()* est difficile à appréhender.
 Pour cela il faut la remettre dans son contexte, à savoir qu'elle est appelée par la méthode *checkPublication()*, qui 
